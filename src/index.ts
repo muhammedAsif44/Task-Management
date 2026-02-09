@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import globalErrorHandler from './middlewares/globalErrorHandler';
 import authRoutes from './apps/auth/routes/auth.routes';
+import projectRoutes from './apps/project/routes/project.routes';
+import taskRoutes from './apps/task/routes/task.routes';
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Global error handling middleware
 app.use(globalErrorHandler);

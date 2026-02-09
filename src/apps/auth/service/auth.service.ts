@@ -81,8 +81,8 @@ export const register = async (input: RegisterInput): Promise<RegisterResponse> 
 /**
  * Login user (returns tokens)
  */
-export const login = async (input: LoginInput): Promise<LoginResponse> => {
-  const { email, password } = input;
+export const login = async (body: LoginInput): Promise<LoginResponse> => {
+  const { email, password } = body;
 
   // Find user with password
   const user = await User.findOne({ email }).select('+password +refreshToken');
