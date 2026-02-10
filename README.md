@@ -10,6 +10,6 @@ npm install
 
 npm run dev
 
-### 3. Run with Docker (optional)
+### 3. Run with Docker 
 
 docker compose up
