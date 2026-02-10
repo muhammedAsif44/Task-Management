@@ -10,16 +10,15 @@ dotenv.config();
 
 const app: Application = express();
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 
-// Global error handling middleware
+
 app.use(globalErrorHandler);
 
 export default app;

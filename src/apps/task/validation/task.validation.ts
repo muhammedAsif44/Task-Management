@@ -24,7 +24,7 @@ export const updateTaskSchema = Joi.object({
     dueDate: Joi.date().optional(),
 });
 
-// Validation middleware factory
+
 export const validate = (schema: ObjectSchema) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const { error } = schema.validate(req.body);

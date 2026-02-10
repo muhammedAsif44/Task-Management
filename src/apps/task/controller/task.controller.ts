@@ -1,19 +1,17 @@
-import { Request, Response } from 'express';
-import * as taskService from '../service/task.service';
+import { Request, Response } from "express";
+import * as taskService from "../service/task.service";
 
-
-export const createTask = async (req: Request, res: Response,) => {
+export const createTask = async (req: Request, res: Response) => {
   const userId = req.user!.id;
   const task = await taskService.createTask(userId, req.body);
   res.status(201).json({
-    status: 'success',
-    message: 'Task created successfully',
+    status: "success",
+    message: "Task created successfully",
     data: { task },
   });
 };
 
-
-export const getAllTasks = async (req: Request, res: Response,) => {
+export const getAllTasks = async (req: Request, res: Response) => {
   const userId = req.user!.id;
   const filters = {
     projectId: req.query.projectId as string | undefined,
@@ -27,7 +25,7 @@ export const getAllTasks = async (req: Request, res: Response,) => {
   const result = await taskService.getTasks(userId, filters);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     total: result.total,
     tasks: result.tasks,
   });
@@ -38,11 +36,10 @@ export const getTaskById = async (req: Request, res: Response) => {
   const taskId = req.params.id as string;
   const task = await taskService.getTaskById(taskId, userId);
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: { task },
   });
 };
-
 
 export const updateTask = async (req: Request, res: Response) => {
   const userId = req.user!.id;
@@ -50,12 +47,11 @@ export const updateTask = async (req: Request, res: Response) => {
   const task = await taskService.updateTask(taskId, userId, req.body);
 
   res.status(200).json({
-    status: 'success',
-    message: 'Task updated successfully',
+    status: "success",
+    message: "Task updated successfully",
     data: { task },
   });
 };
-
 
 export const deleteTask = async (req: Request, res: Response) => {
   const userId = req.user!.id;
@@ -63,8 +59,8 @@ export const deleteTask = async (req: Request, res: Response) => {
   await taskService.deleteTask(taskId, userId);
 
   res.status(200).json({
-    status: 'success',
-    message: 'Task deleted successfully',
+    status: "success",
+    message: "Task deleted successfully",
   });
 };
 
@@ -73,7 +69,7 @@ export const getTaskStats = async (req: Request, res: Response) => {
   const stats = await taskService.getTaskStats(userId);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: stats,
   });
 };
