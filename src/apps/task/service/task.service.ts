@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Task from "../model/task.model";
 import Project from "../../project/model/project.model";
 import AppError from "../../../utils/AppError";
@@ -28,10 +29,7 @@ interface TaskFilters {
   limit?: number;
 }
 
-
-
 export const createTask = async (userId: string, input: CreateTaskInput) => {
-
   const project = await Project.findOne({ _id: input.projectId, userId });
 
   if (!project) {
@@ -71,7 +69,6 @@ export const getTasks = async (userId: string, filters: TaskFilters) => {
     query.$text = { $search: search };
   }
 
-
   const tasks = await Task.find(query)
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -107,7 +104,6 @@ export const updateTask = async (
   const task = await Task.findById(taskId);
   if (!task) throw new AppError("Task not found", 404);
 
-
   const project = await Project.findOne({ _id: task.projectId, userId });
   if (!project) throw new AppError("Access denied", 403);
 
@@ -123,11 +119,53 @@ export const deleteTask = async (taskId: string, userId: string) => {
   const task = await Task.findById(taskId);
   if (!task) throw new AppError("Task not found", 404);
 
-
   const project = await Project.findOne({ _id: task.projectId, userId });
   if (!project) throw new AppError("Access denied", 403);
 
   await task.deleteOne();
 
   return { message: "Task deleted successfully" };
+};
+
+export const getTaskStats = async (userId: string) => {
+  const stats = await Project.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+
+    {
+      $lookup: {
+        from: "tasks",
+        localField: "_id",
+        foreignField: "projectId",
+        as: "tasks",
+      },
+    },
+
+    { $unwind: { path: "$tasks", preserveNullAndEmptyArrays: true } },
+
+    {
+      $group: {
+        _id: "$tasks.status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const totalTasks = stats.reduce(
+    (sum: number, s: any) => (s._id ? sum + s.count : sum),
+    0,
+  );
+  const todo = stats.find((s: any) => s._id === "todo")?.count || 0;
+  const inProgress =
+    stats.find((s: any) => s._id === "in-progress")?.count || 0;
+  const completed = stats.find((s: any) => s._id === "completed")?.count || 0;
+  const completionRate =
+    totalTasks > 0 ? Math.round((completed / totalTasks) * 100) : 0;
+
+  return {
+    totalTasks,
+    todo,
+    inProgress,
+    completed,
+    completionRate,
+  };
 };

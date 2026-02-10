@@ -13,7 +13,7 @@ export const createTask = async (req: Request, res: Response,) => {
 };
 
 
-export const getTasks = async (req: Request, res: Response,) => {
+export const getAllTasks = async (req: Request, res: Response,) => {
   const userId = req.user!.id;
   const filters = {
     projectId: req.query.projectId as string | undefined,
@@ -33,7 +33,7 @@ export const getTasks = async (req: Request, res: Response,) => {
   });
 };
 
-export const getTask = async (req: Request, res: Response) => {
+export const getTaskById = async (req: Request, res: Response) => {
   const userId = req.user!.id;
   const taskId = req.params.id as string;
   const task = await taskService.getTaskById(taskId, userId);
@@ -65,5 +65,15 @@ export const deleteTask = async (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
     message: 'Task deleted successfully',
+  });
+};
+
+export const getTaskStats = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const stats = await taskService.getTaskStats(userId);
+
+  res.status(200).json({
+    status: 'success',
+    data: stats,
   });
 };

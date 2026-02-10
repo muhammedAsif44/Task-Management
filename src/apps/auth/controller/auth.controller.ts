@@ -30,10 +30,7 @@ export const register = async (
   });
 };
 
-/**
- * Login user
- * POST /api/auth/login
- */
+ 
 export const login = async (
   req: Request,
   res: Response,
@@ -53,10 +50,7 @@ export const login = async (
   });
 };
 
-/**
- * Refresh access token
- * POST /api/auth/refresh-token
- */
+ 
 export const refreshToken = async (
   req: Request,
   res: Response,
@@ -67,9 +61,7 @@ export const refreshToken = async (
   if (!oldRefreshToken) {
     return next(new AppError("Refresh token not found", 401));
   }
-
   const result = await authService.refreshToken(oldRefreshToken);
-
   setRefreshTokenCookie(res, result.refreshToken);
 
   res.status(200).json({

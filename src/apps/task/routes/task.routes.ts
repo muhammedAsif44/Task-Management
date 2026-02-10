@@ -9,8 +9,9 @@ import protectMiddleware from "../../../middlewares/protectMiddleware";
 import {
   createTask,
   deleteTask,
-  getTask,
-  getTasks,
+  getTaskById,
+  getAllTasks,
+  getTaskStats,
   updateTask,
 } from "../controller/task.controller";
 
@@ -20,8 +21,9 @@ router.use(protectMiddleware);
 
 router
   .post("/", validate(createTaskSchema), tryCatch(createTask))
-  .get("/", tryCatch(getTasks));
-router.get("/:id", tryCatch(getTask));
+  .get("/", tryCatch(getAllTasks));
+router.get("/stats", tryCatch(getTaskStats));
+router.get("/:id", tryCatch(getTaskById));
 router.put("/:id", validate(updateTaskSchema), tryCatch(updateTask));
 router.delete("/:id", tryCatch(deleteTask));
 
