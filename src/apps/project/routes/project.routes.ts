@@ -19,4 +19,5 @@ router
 // router.get('/', tryCatch(getProjects));
 router.get("/:id", tryCatch(getProject));
 
+
 export default router;
